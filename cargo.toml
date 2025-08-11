@@ -4,3 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+anyhow = "1"
+pixels = "0.12.1"
+winit = "0.28"
+noise = "0.8"
+glam = { version = "0.27", features = ["fast-math"] }
+rand = "0.8"
+image = { version = "0.24", default-features = false, features = ["png", "ico", "jpeg"] }
