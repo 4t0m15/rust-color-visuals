@@ -15,7 +15,6 @@ const HEIGHT: u32 = 800;
 #[derive(Clone, Copy)]
 struct Particle {
     pos: Vec2,
-    prev: Vec2,
     vel: Vec2,
     age: u32,
     alive: bool,
@@ -25,7 +24,6 @@ impl Particle {
     fn new(pos: Vec2) -> Self {
         Self {
             pos,
-            prev: pos,
             vel: Vec2::ZERO,
             age: 0,
             alive: true,
@@ -90,7 +88,6 @@ struct App {
     params: Params,
     particles: Vec<Particle>,
     frame_index: u64,
-    last_frame_time: std::time::Instant,
 }
 
 impl App {
@@ -125,8 +122,6 @@ impl App {
             }
         }
 
-        let width = width;
-        let height = height;
         let noise_seed = 42u32;
         let perlin = Perlin::new(noise_seed);
         let rng = StdRng::seed_from_u64(123456789);
@@ -154,7 +149,6 @@ impl App {
             params,
             particles: Vec::with_capacity((width * height / 4) as usize),
             frame_index: 0,
-            last_frame_time: std::time::Instant::now(),
         }
     }
 }
@@ -246,29 +240,30 @@ impl App {
     fn spawn_particles(&mut self) {
         let width_f = self.width as f32;
         let height_f = self.height as f32;
-        let x = width_f * 0.5;
         let count = self.params.spawn_count;
         if count == 0 {
             return;
         }
         let mut spawned = 0usize;
         let mut i = 0usize;
+        // Reuse dead particle slots first
         while spawned < count && i < self.particles.len() {
             if !self.particles[i].alive {
-                let t = spawned as f32 / count as f32;
-                let base_y = t * height_f;
-                let jitter = self.rng.gen_range(-0.5f32..0.5f32);
-                let pos = Vec2::new(x, base_y + jitter);
+                let pos = Vec2::new(
+                    self.rng.gen_range(0.0..width_f),
+                    self.rng.gen_range(0.0..height_f),
+                );
                 self.particles[i] = Particle::new(pos);
                 spawned += 1;
             }
             i += 1;
         }
+        // Then append any remaining new particles
         while spawned < count {
-            let t = spawned as f32 / count as f32;
-            let base_y = t * height_f;
-            let jitter = self.rng.gen_range(-0.5f32..0.5f32);
-            let pos = Vec2::new(x, base_y + jitter);
+            let pos = Vec2::new(
+                self.rng.gen_range(0.0..width_f),
+                self.rng.gen_range(0.0..height_f),
+            );
             self.particles.push(Particle::new(pos));
             spawned += 1;
         }
