@@ -1,6 +1,8 @@
 # rust-color-visuals
 Cool rust visuals for Shipwrecked project 4
-Controls:
+Insipired by: https://medium.com/%40bit101/flow-fields-part-ii-f3c24c1b777d
+```
+##Controls:
     Space: pause
     R: reseed noise
     [ / ]: scale down/up
@@ -10,3 +12,4 @@ Controls:
     F / G: fade up/down
     C: cycle color mode
     S: save frame as frame_000000.png
+```
