@@ -12,4 +12,5 @@ Insipired by: https://medium.com/%40bit101/flow-fields-part-ii-f3c24c1b777d
     F / G: fade up/down
     C: cycle color mode
     S: save frame as frame_000000.png
+    Down / Up: adjust amount of lines
 ```
